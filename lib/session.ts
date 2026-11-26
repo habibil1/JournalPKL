@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { cookies } from 'next/headers';
+import { connection } from 'next/server';
 
 const STUDENT_COOKIE = 'pkl_student_session';
 const ADMIN_COOKIE = 'pkl_admin_session';
@@ -77,6 +78,7 @@ export async function setStudentSession(siswaId: number): Promise<void> {
 }
 
 export async function getStudentSession(): Promise<number | null> {
+  await connection();
   const cookieStore = await cookies();
   const token = cookieStore.get(STUDENT_COOKIE)?.value;
   const payload = verifyToken(token);
@@ -109,6 +111,7 @@ export async function setAdminSession(): Promise<void> {
 }
 
 export async function getAdminSession(): Promise<boolean> {
+  await connection();
   const cookieStore = await cookies();
   const token = cookieStore.get(ADMIN_COOKIE)?.value;
   const payload = verifyToken(token);
